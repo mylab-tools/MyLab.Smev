@@ -4,8 +4,13 @@ using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using MyLab.ApiClient;
+using MyLab.Log.Dsl;
 using MyLab.SmevClient.Crypt;
 using MyLab.SmevClient.Http;
+using MyLab.SmevClient.Options;
 using MyLab.SmevClient.Smev;
 using MyLab.SmevClient.Soap;
 using MyLab.SmevClient.Utils;
@@ -14,12 +19,7 @@ namespace MyLab.SmevClient
 {
     internal class Smev3Client : IDisposable, ISmev3Client
     {
-        #region members
-
-        /// <summary>
-        /// Параметры клиента
-        /// </summary>
-        private ISmev3ClientContext _context;
+        private readonly IHttpClientFactory _httpClientFactory;
 
         /// <summary>
         /// Криптоалгоритм
@@ -31,17 +31,18 @@ namespace MyLab.SmevClient
         /// </summary>
         private bool _disposed = false;
 
-        #endregion        
+        private readonly IDslLogger _log;
+        private readonly HttpMessageDumper _dumper;
 
-        public Smev3Client(ISmev3ClientContext context)
+        public Smev3Client(IHttpClientFactory httpClientFactory, IOptions<SmevClientOptions> opts, ILogger<Smev3Client> logger = null)
         {
-            _context = context ??
-                throw new ArgumentNullException(nameof(context));
-
+            _httpClientFactory = httpClientFactory;
             _algorithm = new GostAsymmetricAlgorithm(
-                                context.SmevServiceConfig.Container,
-                                context.SmevServiceConfig.Password,
-                                context.SmevServiceConfig.Thumbprint);
+                                opts.Value.Certificate.PfxPath,
+                                opts.Value.Certificate.Password,
+                                opts.Value.Certificate.Thumbprint);
+            _log = logger?.Dsl();
+            _dumper = new HttpMessageDumper();
         }
 
         ~Smev3Client()
@@ -190,7 +191,6 @@ namespace MyLab.SmevClient
         {
             _algorithm?.Dispose();
             _algorithm = null;
-            _context = null;
             _disposed = true;
         }
 
@@ -221,11 +221,19 @@ namespace MyLab.SmevClient
             HttpResponseMessage httpResponse = null;
             try
             {
-                using var httpClient = _context.HttpClientFactory.CreateClient("SmevClient");
+                using var httpClient = _httpClientFactory.CreateClient("SmevClient");
 
                 httpResponse = await httpClient.PostAsync(string.Empty, content, cancellationToken)
                                                .ConfigureAwait(false);
-                
+
+                var reqDump = await _dumper.DumpAsync(httpResponse.RequestMessage);
+                var respDump = await _dumper.DumpAsync(httpResponse);
+
+                _log?.Action("Request sent")
+                    .AndFactIs("request", reqDump)
+                    .AndFactIs("response", respDump)
+                    .Write();
+
                 if (httpResponse.IsSuccessStatusCode)
                 {
                     return httpResponse;
