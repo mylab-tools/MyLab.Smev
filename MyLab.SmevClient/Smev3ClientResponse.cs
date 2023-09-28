@@ -7,18 +7,13 @@ using MyLab.SmevClient.Soap;
 
 namespace MyLab.SmevClient
 {
-    public class Smev3ClientResponse : IDisposable
+    public class Smev3ClientResponse
     {
-        protected HttpResponseMessage _httpResponse;
+        protected HttpResponseMessage HttpResponse;
 
         public Smev3ClientResponse(HttpResponseMessage response)
         {
-            _httpResponse = response ?? throw new ArgumentNullException(nameof(response));
-        }
-
-        ~Smev3ClientResponse()
-        {
-            Dispose(false);
+            HttpResponse = response ?? throw new ArgumentNullException(nameof(response));
         }
 
         /// <summary>
@@ -27,9 +22,9 @@ namespace MyLab.SmevClient
         /// <returns></returns>
         internal HttpResponseMessage DetachHttpResponse()
         {
-            var response = _httpResponse;
+            var response = HttpResponse;
 
-            _httpResponse = null;
+            HttpResponse = null;
 
             return response;
         }
@@ -42,9 +37,7 @@ namespace MyLab.SmevClient
         public Task<T> ReadSoapBodyAsAsync<T>(CancellationToken cancellationToken = default)
             where T : ISoapEnvelopeBody, new()
         {
-            ThrowIfDisposed();
-
-            return _httpResponse.Content.ReadSoapBodyAsAsync<T>(cancellationToken);
+            return HttpResponse.Content.ReadSoapBodyAsAsync<T>(cancellationToken);
         }
 
         /// <summary>
@@ -53,38 +46,7 @@ namespace MyLab.SmevClient
         /// <returns></returns>
         public Task<string> ReadSoapBodyAsStringAsync(CancellationToken cancellationToken = default)
         {
-            ThrowIfDisposed();
-
-            return _httpResponse.Content.ReadSoapBodyAsStringAsync(cancellationToken);
+            return HttpResponse.Content.ReadSoapBodyAsStringAsync(cancellationToken);
         }
-
-        #region IDisposable
-
-        public void Dispose()
-        {
-            Dispose(true);
-
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool _)
-        {
-            _httpResponse?.Dispose();
-            _httpResponse = null;
-        }
-
-        #endregion
-
-        #region private
-
-        private void ThrowIfDisposed()
-        {
-            if(_httpResponse == null)
-            {
-                throw new ObjectDisposedException(nameof(Smev3ClientResponse));
-            }
-        }
-
-        #endregion
     }
 }

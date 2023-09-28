@@ -22,11 +22,6 @@ namespace MyLab.SmevClient.Crypt
             Initialize();
         }
 
-        ~GostR3411_2012_256HashAlgorithm()
-        {
-            Dispose(false);
-        }
-
         public override int InputBlockSize => 64;
 
         public override int OutputBlockSize => 64;

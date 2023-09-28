@@ -16,11 +16,10 @@ using MyLab.SmevClient.Options;
 using MyLab.SmevClient.Smev;
 using MyLab.SmevClient.Soap;
 using MyLab.SmevClient.Utils;
-using Newtonsoft.Json;
 
 namespace MyLab.SmevClient
 {
-    internal class Smev3Client : IDisposable, ISmev3Client
+    internal class Smev3Client : ISmev3Client
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
@@ -28,12 +27,7 @@ namespace MyLab.SmevClient
         /// Криптоалгоритм
         /// </summary>
         private GostAsymmetricAlgorithm _algorithm;
-
-        /// <summary>
-        /// Флаг утилизированого объекта
-        /// </summary>
-        private bool _disposed = false;
-
+        
         private readonly IDslLogger _log;
         private readonly HttpMessageDumper _dumper;
 
@@ -44,11 +38,6 @@ namespace MyLab.SmevClient
             _algorithm = new GostAsymmetricAlgorithm(certProvider);
             _log = logger?.Dsl();
             _dumper = new HttpMessageDumper();
-        }
-
-        ~Smev3Client()
-        {
-            Dispose(false);
         }
 
         /// <summary>
@@ -62,8 +51,6 @@ namespace MyLab.SmevClient
                                                                       CancellationToken cancellationToken)
             where TServiceRequest : new()
         {
-            ThrowIfDisposed();
-
             HttpResponseMessage httpResponse = null;
             try
             {
@@ -78,13 +65,11 @@ namespace MyLab.SmevClient
                         signer: new Smev3XmlSigner(_algorithm)
                     );
                 
-                httpResponse = await SendAsync(envelope, cancellationToken)
-                                                        ;
+                httpResponse = await SendAsync(envelope, cancellationToken);
 
                 var soapEnvelopeBody = await httpResponse
                                                 .Content
-                                                .ReadSoapBodyAsAsync<SendRequestResponse>(cancellationToken)
-                                                ;
+                                                .ReadSoapBodyAsAsync<SendRequestResponse>(cancellationToken);
 
                 return new Smev3ClientResponse<SendRequestResponse>(httpResponse, soapEnvelopeBody);
             }
@@ -107,8 +92,6 @@ namespace MyLab.SmevClient
         public async Task<Smev3ClientResponse> GetResponseAsync(Uri namespaceUri, string rootElementLocalName,
                                                     CancellationToken cancellationToken)
         {
-            ThrowIfDisposed();
-
             var envelope = new GetResponseRequest(
                     requestData: new MessageTypeSelector(namespaceUri, rootElementLocalName)
                     {
@@ -116,9 +99,8 @@ namespace MyLab.SmevClient
                         Id = "SIGNED_BY_CONSUMER"
                     },
                     signer: new Smev3XmlSigner(_algorithm));
-            
-            var httpResponse = await SendAsync(envelope, cancellationToken)
-                                        ;
+
+            var httpResponse = await SendAsync(envelope, cancellationToken);
 
             return new Smev3ClientResponse(httpResponse);
         }
@@ -135,11 +117,9 @@ namespace MyLab.SmevClient
                                                 CancellationToken cancellationToken)
             where TServiceResponse : new()
         {
-            using var response = await GetResponseAsync(namespaceUri, rootElementLocalName, cancellationToken)
-                                        ;
+            using var response = await GetResponseAsync(namespaceUri, rootElementLocalName, cancellationToken);
 
-            var data = await response.ReadSoapBodyAsAsync<GetResponseResponse<TServiceResponse>>()
-                                        ;
+            var data = await response.ReadSoapBodyAsAsync<GetResponseResponse<TServiceResponse>>(cancellationToken);
 
             return new Smev3ClientResponse<GetResponseResponse<TServiceResponse>>(response.DetachHttpResponse(), data);
         }
@@ -152,8 +132,6 @@ namespace MyLab.SmevClient
         /// <returns></returns>
         public async Task<Smev3ClientResponse<AckResponse>> AckAsync(Guid messageId, CancellationToken cancellationToken)
         {
-            ThrowIfDisposed();
-
             var envelope = new AckRequest(
                     new AckTargetMessage
                     {
@@ -170,27 +148,13 @@ namespace MyLab.SmevClient
 
             return new Smev3ClientResponse<AckResponse>(httpResponse, data);
         }
-
-        #region IDisposable
-
+        
         public void Dispose()
-        {
-            Dispose(true);
-
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool _)
         {
             _algorithm?.Dispose();
             _algorithm = null;
-            _disposed = true;
         }
-
-        #endregion
-
-        #region private
-
+        
         /// <summary>
         /// Отправка конверта
         /// </summary>
@@ -248,18 +212,5 @@ namespace MyLab.SmevClient
                 throw;
             }
         }
-
-        /// <summary>
-        /// Бросает исключение если объект утилизирован
-        /// </summary>
-        private void ThrowIfDisposed()
-        {
-            if (_disposed)
-            {
-                throw new ObjectDisposedException(nameof(Smev3Client));
-            }
-        }
-
-        #endregion
     }
 }
