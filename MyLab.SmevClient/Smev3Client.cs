@@ -117,7 +117,7 @@ namespace MyLab.SmevClient
                                                 CancellationToken cancellationToken)
             where TServiceResponse : new()
         {
-            using var response = await GetResponseAsync(namespaceUri, rootElementLocalName, cancellationToken);
+            var response = await GetResponseAsync(namespaceUri, rootElementLocalName, cancellationToken);
 
             var data = await response.ReadSoapBodyAsAsync<GetResponseResponse<TServiceResponse>>(cancellationToken);
 

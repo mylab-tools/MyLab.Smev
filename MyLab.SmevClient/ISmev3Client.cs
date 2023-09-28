@@ -15,7 +15,7 @@ namespace MyLab.SmevClient
         /// <param name="cancellationToken">Токен отмены</param>
         /// <returns></returns>
         Task<Smev3ClientResponse<SendRequestResponse>> SendRequestAsync<TServiceRequest>(
-            SendRequestExecutionContext<TServiceRequest> context, CancellationToken cancellationToken)
+            SendRequestExecutionContext<TServiceRequest> context, CancellationToken cancellationToken = default)
 
             where TServiceRequest : new();
 
@@ -27,7 +27,7 @@ namespace MyLab.SmevClient
         /// <param name="cancellationToken">Токен отмены</param>
         /// <returns></returns>
         Task<Smev3ClientResponse> GetResponseAsync(Uri namespaceUri, string rootElementLocalName, 
-                                            CancellationToken cancellationToken);
+                                            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Получение сообщения из очереди входящих ответов c десереализацией ответа в тип T
@@ -38,7 +38,7 @@ namespace MyLab.SmevClient
         /// <param name="cancellationToken">Токен отмены</param>
         /// <returns></returns>
         Task<Smev3ClientResponse<GetResponseResponse<TServiceResponse>>> GetResponseAsync<TServiceResponse>(
-            Uri namespaceUri, string rootElementLocalName, CancellationToken cancellationToken)
+            Uri namespaceUri, string rootElementLocalName, CancellationToken cancellationToken = default)
 
             where TServiceResponse : new();
 
@@ -48,6 +48,6 @@ namespace MyLab.SmevClient
         /// <param name="messageId">Ид. подтверждаемого сообщения</param>
         /// <param name="cancellationToken">Токен отмены</param>
         /// <returns></returns>
-        Task<Smev3ClientResponse<AckResponse>> AckAsync(Guid messageId, CancellationToken cancellationToken);
+        Task<Smev3ClientResponse<AckResponse>> AckAsync(Guid messageId, CancellationToken cancellationToken = default);
     }
 }
