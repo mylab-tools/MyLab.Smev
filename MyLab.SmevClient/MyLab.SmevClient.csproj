@@ -19,6 +19,15 @@
     <PackageIcon>tools.png</PackageIcon>
   </PropertyGroup>
 
+ <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+    <DefineConstants>Windows_NT</DefineConstants>
+  </PropertyGroup>
+
+
+  <PropertyGroup Condition="'$(OS)' == 'Unix'">
+    <DefineConstants>UNIX</DefineConstants>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
@@ -41,7 +50,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CryptoApiLiteSharp" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />

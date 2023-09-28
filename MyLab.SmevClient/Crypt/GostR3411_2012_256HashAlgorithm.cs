@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Security.Cryptography;
-using CryptoApiLiteSharp;
 
 namespace MyLab.SmevClient.Crypt
 {
@@ -13,11 +12,11 @@ namespace MyLab.SmevClient.Crypt
         {
             HashSizeValue = 256;
             
-            if (!CApiLiteNative.CryptAcquireContext(
-               out _cspHandle, null, CApiLiteConsts.CP_GR3410_2012_PROV,
-               CApiLiteConsts.PROV_GOST_2012_256, CApiLiteConsts.CRYPT_VERIFYCONTEXT))
+            if (!Interop.CryptAcquireContext(
+               out _cspHandle, null, Interop.Consts.CP_GR3410_2012_PROV,
+               Interop.Consts.PROV_GOST_2012_256, Interop.Consts.CRYPT_VERIFYCONTEXT))
             {
-                throw new CApiLiteLastErrorException();
+                throw new Interop.LastErrorException();
             }
 
             Initialize();
@@ -37,11 +36,11 @@ namespace MyLab.SmevClient.Crypt
             _hashHandle?.Close();
             _hashHandle = null;            
 
-            if (!CApiLiteNative.CryptCreateHash(
-                _cspHandle, CApiLiteConsts.CALG_GR3411_2012_256, IntPtr.Zero,
+            if (!Interop.CryptCreateHash(
+                _cspHandle, Interop.Consts.CALG_GR3411_2012_256, IntPtr.Zero,
                 0, out _hashHandle))
             {
-                throw new CApiLiteLastErrorException();
+                throw new Interop.LastErrorException();
             }
         }
 
@@ -54,9 +53,9 @@ namespace MyLab.SmevClient.Crypt
 
             fixed(byte* pbData = &array[ibStart])
             {
-                if (!CApiLiteNative.CryptHashData(_hashHandle, new IntPtr(pbData), cbSize, 0))
+                if (!Interop.CryptHashData(_hashHandle, new IntPtr(pbData), cbSize, 0))
                 {
-                    throw new CApiLiteLastErrorException();
+                    throw new Interop.LastErrorException();
                 }
             }            
         }
@@ -68,10 +67,10 @@ namespace MyLab.SmevClient.Crypt
 
             fixed(void* ptr = data)
             {                
-                if (!CApiLiteNative.CryptGetHashParam(
-                    _hashHandle, CApiLiteConsts.HP_HASHVAL, new IntPtr(ptr), ref dataLength, 0))
+                if (!Interop.CryptGetHashParam(
+                    _hashHandle, Interop.Consts.HP_HASHVAL, new IntPtr(ptr), ref dataLength, 0))
                 {
-                    throw new CApiLiteLastErrorException();
+                    throw new Interop.LastErrorException();
                 }
             }
 

@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Mime;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -37,10 +38,8 @@ namespace MyLab.SmevClient
         public Smev3Client(IHttpClientFactory httpClientFactory, IOptions<SmevClientOptions> opts, ILogger<Smev3Client> logger = null)
         {
             _httpClientFactory = httpClientFactory;
-            _algorithm = new GostAsymmetricAlgorithm(
-                                opts.Value.Certificate.PfxPath,
-                                opts.Value.Certificate.Password,
-                                opts.Value.Certificate.Thumbprint);
+            var certProvider = CertHandleProviderFactory.Create(opts.Value.Certificate);
+            _algorithm = new GostAsymmetricAlgorithm(certProvider);
             _log = logger?.Dsl();
             _dumper = new HttpMessageDumper();
         }
