@@ -1,64 +1,97 @@
 ﻿using System;
 using System.Text;
 using System.Runtime.InteropServices;
+using static MyLab.SmevClient.Crypt.Interop;
 
 namespace MyLab.SmevClient.Crypt
 {
     internal static partial class Interop
     {
-        [DllImport(Libraries.Crypt32, CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern 
-            CertStoreSafeHandle PFXImportCertStore(
+        public static CertStoreSafeHandle PFXImportCertStore(
             [In] ref CRYPT_DATA_BLOB pPfx,
             [In] IntPtr szPassword,
-            [In] uint dwFlags);
+            [In] uint dwFlags)
+        {
+            if (IsWindows)
+            {
+                return InteropWindows.PFXImportCertStore(ref pPfx, szPassword, dwFlags);
+            }
+            return InteropLinux.PFXImportCertStore(ref pPfx, szPassword, dwFlags);
+
+        }
 
         public static CertStoreSafeHandle CertOpenStore(CertStoreProvider lpszStoreProvider, CertEncodingType dwMsgAndCertEncodingType, IntPtr hCryptProv, CertStoreFlags dwFlags, string pvPara)
         {
-            return CertOpenStore((IntPtr)lpszStoreProvider, dwMsgAndCertEncodingType, hCryptProv, dwFlags, pvPara);
+            if (IsWindows)
+            {
+                return InteropWindows.CertOpenStore(lpszStoreProvider, dwMsgAndCertEncodingType, hCryptProv, dwFlags, pvPara);
+            }
+            return InteropLinux.CertOpenStore(lpszStoreProvider, dwMsgAndCertEncodingType, hCryptProv, dwFlags, pvPara);
+
         }
 
-        [DllImport(Libraries.Crypt32, CharSet = CharSet.Ansi, SetLastError = true, EntryPoint = "CertOpenStore")]
-        private static extern CertStoreSafeHandle CertOpenStore(IntPtr lpszStoreProvider, CertEncodingType dwMsgAndCertEncodingType, IntPtr hCryptProv, CertStoreFlags dwFlags, string pvPara);
+
+        public static bool CertControlStore(CertStoreSafeHandle hCertStore, CertControlStoreFlags dwFlags, CertControlStoreType dwControlType, IntPtr pvCtrlPara)
+        {
+            if (IsWindows)
+            {
+                return InteropWindows.CertControlStore(hCertStore, dwFlags, dwControlType, pvCtrlPara);
+            }
+            return InteropLinux.CertControlStore(hCertStore, dwFlags, dwControlType, pvCtrlPara);
+
+        }
 
 
-        [DllImport(Libraries.Crypt32, CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern bool CertControlStore(CertStoreSafeHandle hCertStore, CertControlStoreFlags dwFlags, CertControlStoreType dwControlType, IntPtr pvCtrlPara);
-
-
-        [DllImport(Libraries.Crypt32, SetLastError = true)]
-        public static extern
-            CertContextSafeHandle CertFindCertificateInStore(
+        public static CertContextSafeHandle CertFindCertificateInStore(
             [In] CertStoreSafeHandle hCertStore,
             [In] uint dwCertEncodingType,
             [In] uint dwFindFlags,
             [In] uint dwFindType,
             [In] IntPtr pvFindPara,
-            [In] IntPtr pPrevCertContext);
+            [In] IntPtr pPrevCertContext)
+        {
+            if (IsWindows)
+            {
+                return InteropWindows.CertFindCertificateInStore(hCertStore, dwCertEncodingType, dwFindFlags, dwFindType, pvFindPara, pPrevCertContext);
+            }
+            return InteropLinux.CertFindCertificateInStore(hCertStore, dwCertEncodingType, dwFindFlags, dwFindType, pvFindPara, pPrevCertContext);
+        }
 
-        [DllImport(Libraries.Crypt32, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern
-        bool CertCloseStore(
+        public static  bool CertCloseStore(
             [In] IntPtr hCertStore,
-            [In] uint dwFlags);
+            [In] uint dwFlags)
+        {
+            if (IsWindows)
+            {
+                return InteropWindows.CertCloseStore(hCertStore, dwFlags);
+            }
+            return InteropLinux.CertCloseStore(hCertStore, dwFlags);
 
-        [DllImport(Libraries.Crypt32, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern 
-        bool CertFreeCertificateContext(
-            [In] IntPtr pCertContext);
+        }
 
-        [DllImport(Libraries.Crypt32, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern
-        bool CryptAcquireCertificatePrivateKey(
+        public static bool CertFreeCertificateContext([In] IntPtr pCertContext)
+        {
+            if (IsWindows)
+            {
+                return InteropWindows.CertFreeCertificateContext(pCertContext);
+            }
+            return InteropLinux.CertFreeCertificateContext(pCertContext);
+        }
+
+        public static  bool CryptAcquireCertificatePrivateKey(
             [In] CertContextSafeHandle pCert,
             [In] uint dwFlags,
             [In] IntPtr pvReserved,
             [Out] out CspSafeHandle phCryptProv,
             [In, Out] ref uint pdwKeySpec,
-            [In, Out] ref bool pfCallerFreeProv);
+            [In, Out] ref bool pfCallerFreeProv)
+        {
+            if (IsWindows)
+            {
+                return InteropWindows.CryptAcquireCertificatePrivateKey(pCert, dwFlags, pvReserved,out phCryptProv, ref pdwKeySpec, ref pfCallerFreeProv);
+            }
+            return InteropLinux.CryptAcquireCertificatePrivateKey(pCert, dwFlags, pvReserved, out phCryptProv, ref pdwKeySpec, ref pfCallerFreeProv);
+        }
 
     }
 }

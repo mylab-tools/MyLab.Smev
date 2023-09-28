@@ -16,7 +16,7 @@ namespace MyLab.SmevClient.Crypt
                out _cspHandle, null, Interop.Consts.CP_GR3410_2012_PROV,
                Interop.Consts.PROV_GOST_2012_256, Interop.Consts.CRYPT_VERIFYCONTEXT))
             {
-                throw new Interop.LastErrorException();
+                throw new Interop.CPLastErrorException();
             }
 
             Initialize();
@@ -35,7 +35,7 @@ namespace MyLab.SmevClient.Crypt
                 _cspHandle, Interop.Consts.CALG_GR3411_2012_256, IntPtr.Zero,
                 0, out _hashHandle))
             {
-                throw new Interop.LastErrorException();
+                throw new Interop.CPLastErrorException();
             }
         }
 
@@ -50,7 +50,7 @@ namespace MyLab.SmevClient.Crypt
             {
                 if (!Interop.CryptHashData(_hashHandle, new IntPtr(pbData), cbSize, 0))
                 {
-                    throw new Interop.LastErrorException();
+                    throw new Interop.CPLastErrorException();
                 }
             }            
         }
@@ -65,7 +65,7 @@ namespace MyLab.SmevClient.Crypt
                 if (!Interop.CryptGetHashParam(
                     _hashHandle, Interop.Consts.HP_HASHVAL, new IntPtr(ptr), ref dataLength, 0))
                 {
-                    throw new Interop.LastErrorException();
+                    throw new Interop.CPLastErrorException();
                 }
             }
 

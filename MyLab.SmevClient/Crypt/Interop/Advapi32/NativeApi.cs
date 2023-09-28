@@ -6,77 +6,109 @@ namespace MyLab.SmevClient.Crypt
 {
     internal static partial class Interop
     {
-        [DllImport(Libraries.Advapi32, CharSet = CharSet.Ansi, SetLastError = true, EntryPoint = "CryptAcquireContextA")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern  bool CryptAcquireContext(
+        public static bool CryptAcquireContext(
             [Out] out CspSafeHandle phProv,
             [In] string pszContainer,
             [In] string pszProvider,
             [In] uint dwProvType,
-            [In] uint dwFlags);
+            [In] uint dwFlags)
+        {
+            if (IsWindows)
+            {
+                return InteropWindows.CryptAcquireContext(out phProv, pszContainer, pszProvider, dwProvType, dwFlags);
+            }
+            return InteropLinux.CryptAcquireContext(out phProv, pszContainer, pszProvider, dwProvType, dwFlags);
+        }
 
-        [DllImport(Libraries.Advapi32, CharSet = CharSet.Auto, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern 
-        bool CryptReleaseContext(
-            [In] IntPtr hProv,
-            [In] uint dwFlags);
+        public static bool CryptReleaseContext(
+             [In] IntPtr hProv,
+             [In] uint dwFlags)
+        {
+            if (IsWindows)
+            {
+                return InteropWindows.CryptReleaseContext(hProv, dwFlags);
+            }
+            return InteropLinux.CryptReleaseContext(hProv, dwFlags);
 
-        [DllImport(Libraries.Advapi32, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern
-        bool CryptCreateHash(
+        }
+
+        public static bool CryptCreateHash(
             [In] CspSafeHandle hProv,
             [In] uint algid,
             [In] IntPtr hKey,
             [In] int dwFlags,
-            [Out] out HashSafeHandle phHash);
+            [Out] out HashSafeHandle phHash)
+        {
+            if (IsWindows)
+            {
+                return InteropWindows.CryptCreateHash(hProv, algid, hKey, dwFlags, out phHash);
+            }
+            return InteropLinux.CryptCreateHash(hProv, algid, hKey, dwFlags, out phHash);
+        }
 
-        [DllImport(Libraries.Advapi32, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern
-        bool CryptDestroyHash(
-          [In] IntPtr hHash
-        );
+        public static bool CryptDestroyHash([In] IntPtr hHash)
+        {
+            if (IsWindows)
+            {
+                return InteropWindows.CryptDestroyHash(hHash);
+            }
+            return InteropLinux.CryptDestroyHash(hHash);
+        }
 
 
-        [DllImport(Libraries.Advapi32, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern
-        bool CryptHashData(
+        public static bool CryptHashData(
             [In] HashSafeHandle hHash,
             [In] IntPtr pbData,
             [In] int dataLen,
-            [In] int flags);
+            [In] int flags)
+        {
+            if (IsWindows)
+            {
+                return InteropWindows.CryptHashData(hHash, pbData, dataLen, flags);
+            }
+            return InteropLinux.CryptHashData(hHash, pbData, dataLen, flags);
+        }
 
-        [DllImport(Libraries.Advapi32, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern 
-        bool CryptGetHashParam(
+        public static  bool CryptGetHashParam(
             [In] HashSafeHandle hHash,
             [In] uint dwParam,
             [In, Out] IntPtr pbData,
             [In, Out] ref int pdwDataLen,
-            [In] int dwFlags);
+            [In] int dwFlags)
+        {
+            if (IsWindows)
+            {
+                return InteropWindows.CryptGetHashParam(hHash, dwParam, pbData, ref pdwDataLen, dwFlags);
+            }
+            return InteropLinux.CryptGetHashParam(hHash, dwParam, pbData, ref pdwDataLen, dwFlags);
+        }
 
-        [DllImport(Libraries.Advapi32, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern
-        bool CryptSetHashParam(
+        public static bool CryptSetHashParam(
             [In] HashSafeHandle hHash,
             [In] uint dwParam,
             [In] IntPtr pbData,
-            [In] int dwFlags);
+            [In] int dwFlags)
+        {
+            if (IsWindows)
+            {
+                return InteropWindows.CryptSetHashParam(hHash, dwParam, pbData, dwFlags);
+            }
+            return InteropLinux.CryptSetHashParam(hHash, dwParam, pbData, dwFlags);
+        }
 
-        [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Ansi, EntryPoint = "CryptSignHashA")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern 
-        bool CryptSignHash(
+        public static  bool CryptSignHash(
             [In] HashSafeHandle hHash,
             [In] uint keySpec,
             [In] IntPtr description,
             [In] uint flags,
             [Out] IntPtr signature,
-            [In, Out] ref int signatureLen);
+            [In, Out] ref int signatureLen)
+        {
+            if (IsWindows)
+            {
+                return InteropWindows.CryptSignHash(hHash, keySpec, description, flags, signature, ref signatureLen);
+            }
+            return InteropLinux.CryptSignHash(hHash, keySpec, description, flags, signature, ref signatureLen);
+        }
     }
 }

@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace MyLab.SmevClient.Crypt
 {
     internal static partial class Interop
     {
-        public class LastErrorException : Exception
+        public class CPLastErrorException : Exception
         {
-            public LastErrorException() :
+            public CPLastErrorException() :
                 base(GetMessage(Interop.GetLastError()))
             {
             }
@@ -30,4 +31,5 @@ namespace MyLab.SmevClient.Crypt
             }
         }
     }
+
 }

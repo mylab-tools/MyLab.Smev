@@ -45,7 +45,7 @@ namespace MyLab.SmevClient.Crypt
                     _certHandle.CertHandle, Interop.Consts.CRYPT_ACQUIRE_USE_PROV_INFO_FLAG,
                     IntPtr.Zero, out _cspHandle, ref _keySpec, ref callerFreeProvider))
                 {
-                    throw new Interop.LastErrorException();
+                    throw new Interop.CPLastErrorException();
                 }
             }
             catch
@@ -74,14 +74,14 @@ namespace MyLab.SmevClient.Crypt
                     _cspHandle, Interop.Consts.CALG_GR3411_2012_256, IntPtr.Zero,
                     0, out hashHandle))
                 {
-                    throw new Interop.LastErrorException();
+                    throw new Interop.CPLastErrorException();
                 }
 
                 fixed (void* ptrHashData = hashData)
                 {
                     if (!Interop.CryptSetHashParam(hashHandle, Interop.Consts.HP_HASHVAL, new IntPtr(ptrHashData), 0))
                     {
-                        throw new Interop.LastErrorException();
+                        throw new Interop.CPLastErrorException();
                     }
 
                     var signData = new byte[SIGN_BUFF_SIZE];
@@ -91,7 +91,7 @@ namespace MyLab.SmevClient.Crypt
                     {
                         if (!Interop.CryptSignHash(hashHandle, _keySpec, IntPtr.Zero, 0, new IntPtr(ptrSignData), ref signDataLen))
                         {
-                            throw new Interop.LastErrorException();
+                            throw new Interop.CPLastErrorException();
                         }
                     }
 

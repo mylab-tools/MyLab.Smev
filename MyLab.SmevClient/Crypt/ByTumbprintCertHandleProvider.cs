@@ -43,7 +43,7 @@ namespace MyLab.SmevClient.Crypt
                 
                 if (storeHandle.IsInvalid)
                 {
-                    throw new Interop.LastErrorException();
+                    throw new Interop.CPLastErrorException();
                 }
 
                 var thumbPrintData = HexConvert.HexToArray(_thumbPrint);
@@ -62,7 +62,7 @@ namespace MyLab.SmevClient.Crypt
 
                     if (certHandle.IsInvalid)
                     {
-                        throw new Interop.LastErrorException();
+                        throw new Interop.CPLastErrorException();
                     }
                 }
                 return new CertContextSafeHandleHandler(storeHandle, certHandle);
