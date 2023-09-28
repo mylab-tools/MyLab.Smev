@@ -57,8 +57,21 @@ namespace MyLab.SmevClient.Smev
                         (r) => SendingTimestamp = DateTime.Parse(r.ReadElementContentAsString()));
 
                     metaDataReader.ReadElementIfItCurrentOrRequired(
+                        "MessageBroker", Smev3NameSpaces.MessageExchangeTypes11, required: false,
+                        (r) => r.Skip());
+
+                    metaDataReader.ReadElementIfItCurrentOrRequired(
+                        "DestinationName", Smev3NameSpaces.MessageExchangeTypes11, required: true,
+                        (r) => r.Skip());
+
+                    metaDataReader.ReadElementIfItCurrentOrRequired(
                         "Recipient", Smev3NameSpaces.MessageExchangeTypes11, required: false,
                         (r) => r.Skip());
+
+                    metaDataReader.ReadElementIfItCurrentOrRequired(
+                        "SupplementaryData", Smev3NameSpaces.MessageExchangeTypes11, required: true,
+                        (r) => r.Skip());
+
 
                     metaDataReader.ReadElementIfItCurrentOrRequired(
                         "DeliveryTimestamp", Smev3NameSpaces.MessageExchangeTypes11, required: false,
