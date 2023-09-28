@@ -121,7 +121,7 @@ namespace MyLab.SmevClient
 
             var data = await response.ReadSoapBodyAsAsync<GetResponseResponse<TServiceResponse>>(cancellationToken);
 
-            return new Smev3ClientResponse<GetResponseResponse<TServiceResponse>>(response.DetachHttpResponse(), data);
+            return new Smev3ClientResponse<GetResponseResponse<TServiceResponse>>(response.HttpResponse, data);
         }
 
         /// <summary>

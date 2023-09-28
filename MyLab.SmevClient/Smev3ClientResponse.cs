@@ -9,24 +9,11 @@ namespace MyLab.SmevClient
 {
     public class Smev3ClientResponse
     {
-        protected HttpResponseMessage HttpResponse;
+        public HttpResponseMessage HttpResponse { get; }
 
         public Smev3ClientResponse(HttpResponseMessage response)
         {
             HttpResponse = response ?? throw new ArgumentNullException(nameof(response));
-        }
-
-        /// <summary>
-        /// Открепляет HTTP ответ. Далее нельзя вызывать никакие методы объекта кроме Dispose
-        /// </summary>
-        /// <returns></returns>
-        internal HttpResponseMessage DetachHttpResponse()
-        {
-            var response = HttpResponse;
-
-            HttpResponse = null;
-
-            return response;
         }
 
         /// <summary>
