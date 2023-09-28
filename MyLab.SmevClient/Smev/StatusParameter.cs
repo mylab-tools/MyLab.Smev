@@ -21,7 +21,7 @@ namespace MyLab.SmevClient.Smev
         public void ReadXml(XmlReader reader)
         {
             //reader.ReadElementInnerContent(
-            //    "ResponseMessage", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: true,
+            //    "ResponseMessage", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_1, required: true,
             //    (respReader) =>
             //    {
             //        var response = new Response();
@@ -32,12 +32,12 @@ namespace MyLab.SmevClient.Smev
 
             //        // AttachmentContentList
             //        respReader.ReadElementContent(
-            //            "AttachmentContentList", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false,
+            //            "AttachmentContentList", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_1, required: false,
             //            (r) => r.Skip());
 
             //        // SMEVSignature
             //        respReader.ReadElementContent(
-            //            "SMEVSignature", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false,
+            //            "SMEVSignature", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_1, required: false,
             //            (r) => r.Skip());
             //    });
         }

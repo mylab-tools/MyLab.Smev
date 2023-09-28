@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Net.Http.Headers;
 using MyLab.SmevClient.Soap;
 
 namespace MyLab.SmevClient.Http
@@ -55,9 +57,15 @@ namespace MyLab.SmevClient.Http
                 stream.Seek(0, SeekOrigin.Begin);
             }
 
-            if (httpContent.IsMimeMultipartContent(out string boundary))
+            var mediaTypeHeader = MediaTypeHeaderValue.Parse(httpContent.Headers.ContentType.ToString());
+
+            if(mediaTypeHeader?.Type.Value?.ToLower() == "multipart")
             {
-                var multipartReader = new MultipartReader(boundary, stream);
+                if (mediaTypeHeader.Boundary.Value == null)
+                    throw new InvalidOperationException("Не удаётся определить boundary для multypart содержимого ответа");
+
+                var normBoundary = mediaTypeHeader.Boundary.Value.Trim('\"');
+                var multipartReader = new MultipartReader(normBoundary, stream);
 
                 var section = await multipartReader.ReadNextSectionAsync(cancellationToken)
                                                 .ConfigureAwait(false);

@@ -37,35 +37,35 @@ namespace MyLab.SmevClient.Smev
         public void ReadXml(XmlReader reader)
         {
             reader.ReadElementSubtreeContent(
-                "MessageMetadata", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: true,
+                "MessageMetadata", Smev3NameSpaces.MessageExchangeTypes11, required: true,
                 (metaDataReader) =>
                 {
                     metaDataReader.ReadElementIfItCurrentOrRequired(
-                        "MessageId", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false,
+                        "MessageId", Smev3NameSpaces.MessageExchangeTypes11, required: false,
                         (r) => MessageId = Guid.Parse((string)r.ReadElementContentAsString()));
 
                     metaDataReader.ReadElementIfItCurrentOrRequired(
-                        "MessageType", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: true,
+                        "MessageType", Smev3NameSpaces.MessageExchangeTypes11, required: true,
                         (r) => MessageType = r.ReadElementContentAsString());
 
                     metaDataReader.ReadElementIfItCurrentOrRequired(
-                        "Sender", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false,
+                        "Sender", Smev3NameSpaces.MessageExchangeTypes11, required: false,
                         (r) => r.Skip());
 
                     metaDataReader.ReadElementIfItCurrentOrRequired(
-                        "SendingTimestamp", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: true,
+                        "SendingTimestamp", Smev3NameSpaces.MessageExchangeTypes11, required: true,
                         (r) => SendingTimestamp = DateTime.Parse(r.ReadElementContentAsString()));
 
                     metaDataReader.ReadElementIfItCurrentOrRequired(
-                        "Recipient", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false,
+                        "Recipient", Smev3NameSpaces.MessageExchangeTypes11, required: false,
                         (r) => r.Skip());
 
                     metaDataReader.ReadElementIfItCurrentOrRequired(
-                        "DeliveryTimestamp", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false,
+                        "DeliveryTimestamp", Smev3NameSpaces.MessageExchangeTypes11, required: false,
                         (r) => DeliveryTimestamp = DateTime.Parse(r.ReadElementContentAsString()));
 
                     metaDataReader.ReadElementIfItCurrentOrRequired(
-                        "Status", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false,
+                        "Status", Smev3NameSpaces.MessageExchangeTypes11, required: false,
                         (r) => Status = r.ReadElementContentAsString());
                 });
         }

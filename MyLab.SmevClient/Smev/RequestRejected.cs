@@ -27,12 +27,12 @@ namespace MyLab.SmevClient.Smev
 
         public void ReadXml(XmlReader reader)
         {
-            reader.ReadElementSubtreeContent(nameof(RequestRejected), Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false, 
+            reader.ReadElementSubtreeContent(nameof(RequestRejected), Smev3NameSpaces.MessageExchangeTypes11, required: false, 
                 rejectionReader =>
                 {
-                    rejectionReader.ReadElementIfItCurrentOrRequired("RejectionReasonCode", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: true, 
+                    rejectionReader.ReadElementIfItCurrentOrRequired("RejectionReasonCode", Smev3NameSpaces.MessageExchangeTypes11, required: true, 
                         r => RejectionReasonCode = r.ReadElementContentAsString());
-                    rejectionReader.ReadElementIfItCurrentOrRequired("RejectionReasonDescription", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: true, 
+                    rejectionReader.ReadElementIfItCurrentOrRequired("RejectionReasonDescription", Smev3NameSpaces.MessageExchangeTypes11, required: true, 
                         r => RejectionReasonDescription = r.ReadElementContentAsString());
                 });
         }

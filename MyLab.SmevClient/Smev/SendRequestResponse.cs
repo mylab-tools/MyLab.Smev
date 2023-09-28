@@ -31,7 +31,7 @@ namespace MyLab.SmevClient.Smev
                 (bodyReader) =>
                 {
                     bodyReader.ReadElementSubtreeContent(
-                        "SendRequestResponse", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: true,
+                        "SendRequestResponse", Smev3NameSpaces.MessageExchangeTypes11, required: true,
                         (r) =>
                         {
                             var messageMetadata = new MessageMetadata();

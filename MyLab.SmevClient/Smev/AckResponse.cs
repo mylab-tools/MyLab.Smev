@@ -23,7 +23,7 @@ namespace MyLab.SmevClient.Smev
                 (bodyReader) =>
                 {
                     bodyReader.ReadElementSubtreeContent(
-                        "AckResponse", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: true,
+                        "AckResponse", Smev3NameSpaces.MessageExchangeTypes11, required: true,
                         (r) =>
                         {
                         });

@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -15,6 +16,7 @@ using MyLab.SmevClient.Options;
 using MyLab.SmevClient.Smev;
 using MyLab.SmevClient.Soap;
 using MyLab.SmevClient.Utils;
+using Newtonsoft.Json;
 
 namespace MyLab.SmevClient
 {
@@ -38,7 +40,7 @@ namespace MyLab.SmevClient
         public Smev3Client(IHttpClientFactory httpClientFactory, IOptions<SmevClientOptions> opts, ILogger<Smev3Client> logger = null)
         {
             _httpClientFactory = httpClientFactory;
-            var certProvider = CertHandleProviderFactory.Create(opts.Value.Certificate);
+            var certProvider = new ByTumbprintCertHandleProvider(StoreLocation.CurrentUser, opts.Value.CertThumbprint);
             _algorithm = new GostAsymmetricAlgorithm(certProvider);
             _log = logger?.Dsl();
             _dumper = new HttpMessageDumper();
@@ -75,12 +77,8 @@ namespace MyLab.SmevClient
                         { TestMessage = context.IsTest },
                         signer: new Smev3XmlSigner(_algorithm)
                     );
-
-                var envelopeBytes = envelope.Get();
-
-                context.OnBeforeSend?.Invoke(envelopeBytes);
-
-                httpResponse = await SendAsync(envelopeBytes, cancellationToken)
+                
+                httpResponse = await SendAsync(envelope, cancellationToken)
                                                         .ConfigureAwait(false);
 
                 var soapEnvelopeBody = await httpResponse
@@ -118,10 +116,8 @@ namespace MyLab.SmevClient
                         Id = "SIGNED_BY_CONSUMER"
                     },
                     signer: new Smev3XmlSigner(_algorithm));
-
-            var envelopeBytes = envelope.Get();
-
-            var httpResponse = await SendAsync(envelopeBytes, cancellationToken)
+            
+            var httpResponse = await SendAsync(envelope, cancellationToken)
                                         .ConfigureAwait(false);
 
             return new Smev3ClientResponse(httpResponse);
@@ -165,10 +161,8 @@ namespace MyLab.SmevClient
                         Id = "SIGNED_BY_CALLER"
                     },
                     signer: new Smev3XmlSigner(_algorithm));
-
-            var envelopeBytes = envelope.Get();
-
-            var httpResponse = await SendAsync(envelopeBytes, cancellationToken)
+            
+            var httpResponse = await SendAsync(envelope, cancellationToken)
                                         .ConfigureAwait(false);
 
             var data = await httpResponse.Content.ReadSoapBodyAsAsync<AckResponse>(cancellationToken)
@@ -202,20 +196,20 @@ namespace MyLab.SmevClient
         /// </summary>
         /// <param name="envelopeBytes"></param>
         /// <param name="cancellationToken"></param>
-        private async Task<HttpResponseMessage> SendAsync(byte[] envelopeBytes, CancellationToken cancellationToken)
+        private async Task<HttpResponseMessage> SendAsync(ISmev3Envelope envelope, CancellationToken cancellationToken)
         {
-            if (envelopeBytes == null)
-            {
-                throw new ArgumentNullException(nameof(envelopeBytes));
-            }
+            if (envelope == null) throw new ArgumentNullException(nameof(envelope));
 
+            var envelopeBytes = envelope.Get();
             var content = new ByteArrayContent(
                 envelopeBytes, 0, envelopeBytes.Length);
 
-            content.Headers.ContentType = new MediaTypeHeaderValue(MediaTypeNames.Application.Soap)
+            content.Headers.ContentType = new MediaTypeHeaderValue(MediaTypeNames.Text.Xml)
             {
                 CharSet = "utf-8"
             };
+
+            content.Headers.Add("SOAPAction", $"\"urn:{envelope.SmevMethod}\"");
 
             HttpResponseMessage httpResponse = null;
             try

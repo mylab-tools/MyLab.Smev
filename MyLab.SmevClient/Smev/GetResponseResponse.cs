@@ -30,7 +30,7 @@ namespace MyLab.SmevClient.Smev
                 (bodyReader) =>
                 {
                     bodyReader.ReadElementSubtreeContent(
-                        "GetResponseResponse", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: true,
+                        "GetResponseResponse", Smev3NameSpaces.MessageExchangeTypes11, required: true,
                         (r) =>
                         {
                             var responseMessage = new ResponseMessage<T>();

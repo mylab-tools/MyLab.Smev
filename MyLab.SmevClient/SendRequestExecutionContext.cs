@@ -13,10 +13,5 @@ namespace MyLab.SmevClient
         /// Флаг тестового запроса
         /// </summary>
         public bool IsTest { get; set; }
-
-        /// <summary>
-        /// Вызывается перед отправкой пакета в СМЭВ
-        /// </summary>
-        public Action<ReadOnlyMemory<byte>> OnBeforeSend { get; set; }
     }
 }

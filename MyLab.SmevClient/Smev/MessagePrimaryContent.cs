@@ -28,7 +28,7 @@ namespace MyLab.SmevClient.Smev
         public void ReadXml(XmlReader reader)
         {
             reader.ReadElementSubtreeContent(
-                "MessagePrimaryContent", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_BASIC_1_2, required: true,
+                "MessagePrimaryContent", Smev3NameSpaces.MessageExchangeTypesBasic11, required: true,
                 (contentReader) =>
                 {
                     if(typeof(T) == typeof(MessagePrimaryContentXml))
@@ -51,7 +51,7 @@ namespace MyLab.SmevClient.Smev
         public void WriteXml(XmlWriter writer)
         {
             writer.WriteStartElement("MessagePrimaryContent",
-                Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_BASIC_1_2);
+                Smev3NameSpaces.MessageExchangeTypesBasic11);
 
             Smev3XmlSerializer.ToXmlElement(Content)
                 .WriteTo(writer);

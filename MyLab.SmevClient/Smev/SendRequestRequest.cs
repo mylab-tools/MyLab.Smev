@@ -23,6 +23,8 @@ namespace MyLab.SmevClient.Smev
 
         #endregion
 
+        public Smev3Methods SmevMethod => Smev3Methods.SendRequest;
+
         public SendRequestRequest()
         {
         }
@@ -68,7 +70,7 @@ namespace MyLab.SmevClient.Smev
 
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteStartElement("SendRequestRequest", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2);
+            writer.WriteStartElement("SendRequestRequest", Smev3NameSpaces.MessageExchangeTypes11);
             
             _requestData.WriteXml(writer);
 

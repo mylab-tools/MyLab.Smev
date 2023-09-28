@@ -32,23 +32,23 @@ namespace MyLab.SmevClient.Smev
         public void ReadXml(XmlReader reader)
         {
             reader.ReadElementSubtreeContent(
-                "AsyncProcessingStatus", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: true,
+                "AsyncProcessingStatus", Smev3NameSpaces.MessageExchangeTypes11, required: true,
                 (statusReader) =>
                 {
                     statusReader.ReadElementIfItCurrentOrRequired(
-                        "OriginalMessageId", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: true,
+                        "OriginalMessageId", Smev3NameSpaces.MessageExchangeTypes11, required: true,
                         (r) => OriginalMessageId = Guid.Parse((string)r.ReadElementContentAsString()));
 
                     statusReader.ReadElementIfItCurrentOrRequired(
-                        "StatusCategory", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: true,
+                        "StatusCategory", Smev3NameSpaces.MessageExchangeTypes11, required: true,
                         (r) => StatusCategory = r.ReadElementContentAsString());
 
                     statusReader.ReadElementIfItCurrentOrRequired(
-                        "StatusDetails", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false,
+                        "StatusDetails", Smev3NameSpaces.MessageExchangeTypes11, required: false,
                         (r) => StatusDetails = r.ReadElementContentAsString());
 
                     statusReader.ReadElementIfItCurrentOrRequired(
-                        "SmevFault", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false,
+                        "SmevFault", Smev3NameSpaces.MessageExchangeTypes11, required: false,
                         (r) => 
                         {
                             var fault = new SmevFault();

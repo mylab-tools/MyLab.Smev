@@ -1,7 +1,8 @@
 ﻿namespace MyLab.SmevClient.Smev
 {
-    internal enum Smev3Methods
+    public enum Smev3Methods
     {
+        Undefined, 
         SendRequest,
         GetResponse,
         Ack

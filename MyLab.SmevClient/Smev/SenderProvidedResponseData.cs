@@ -35,19 +35,19 @@ namespace MyLab.SmevClient.Smev
         public void ReadXml(XmlReader reader)
         {
             reader.ReadElementSubtreeContent(
-                "SenderProvidedResponseData", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: true,
+                "SenderProvidedResponseData", Smev3NameSpaces.MessageExchangeTypes11, required: true,
                 (respReader) =>
                 {
                     respReader.ReadElementIfItCurrentOrRequired(
-                        "MessageID", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: true,
+                        "MessageID", Smev3NameSpaces.MessageExchangeTypes11, required: true,
                         (r) => MessageID = Guid.Parse((string)r.ReadElementContentAsString()));
 
                     respReader.ReadElementIfItCurrentOrRequired(
-                        "To", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: true,
+                        "To", Smev3NameSpaces.MessageExchangeTypes11, required: true,
                         (r) => r.Skip());
 
                     respReader.ReadElementIfItCurrentOrRequired(
-                        "MessagePrimaryContent", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_BASIC_1_2, required: false,
+                        "MessagePrimaryContent", Smev3NameSpaces.MessageExchangeTypesBasic11, required: false,
                         (r) =>
                         {
                             var msgPrimaryContent = new MessagePrimaryContent<T>();
@@ -58,38 +58,38 @@ namespace MyLab.SmevClient.Smev
                         });
 
                     respReader.ReadElementIfItCurrentOrRequired(
-                        "PersonalSignature", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false,
+                        "PersonalSignature", Smev3NameSpaces.MessageExchangeTypes11, required: false,
                         (r) =>
                         {
                             r.Skip();
                         });
 
                     respReader.ReadElementIfItCurrentOrRequired(
-                        "AttachmentHeaderList", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false,
+                        "AttachmentHeaderList", Smev3NameSpaces.MessageExchangeTypes11, required: false,
                         (r) =>
                         {
                             r.Skip();
                         });
 
                     respReader.ReadElementIfItCurrentOrRequired(
-                        "RefAttachmentHeaderList", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false,
+                        "RefAttachmentHeaderList", Smev3NameSpaces.MessageExchangeTypes11, required: false,
                         (r) =>
                         {
                             r.Skip();
                         });
 
                     respReader.ReadElementIfItCurrentOrRequired(
-                        "AsyncProcessingStatus", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false,
+                        "AsyncProcessingStatus", Smev3NameSpaces.MessageExchangeTypes11, required: false,
                         (r) =>
                         {
                             var status = new AsyncProcessingStatus();
                             status.ReadXml(r);
                             ProcessingStatus = status;
                         });
-                    respReader.ReadElementIfItCurrentOrRequired("RequestRejected", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false, r =>
+                    respReader.ReadElementIfItCurrentOrRequired("RequestRejected", Smev3NameSpaces.MessageExchangeTypes11, required: false, r =>
                     {
                         var requestRejectedList = new List<RequestRejected>();
-                        while (reader.IsStartElement("RequestRejected", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2))
+                        while (reader.IsStartElement("RequestRejected", Smev3NameSpaces.MessageExchangeTypes11))
                         {
                             var requestRejected = new RequestRejected();
                             requestRejected.ReadXml(r);

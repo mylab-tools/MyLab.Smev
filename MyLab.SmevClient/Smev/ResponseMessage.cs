@@ -23,7 +23,7 @@ namespace MyLab.SmevClient.Smev
         public void ReadXml(XmlReader reader)
         {
             reader.ReadElementSubtreeContent(
-                "ResponseMessage", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: true,
+                "ResponseMessage", Smev3NameSpaces.MessageExchangeTypes11, required: true,
                 (respReader) =>
                 {
                     var response = new Response<T>();
@@ -34,12 +34,12 @@ namespace MyLab.SmevClient.Smev
 
                     // AttachmentContentList
                     respReader.ReadElementIfItCurrentOrRequired(
-                        "AttachmentContentList", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false,
+                        "AttachmentContentList", Smev3NameSpaces.MessageExchangeTypes11, required: false,
                         (r) => r.Skip());
 
                     // SMEVSignature
                     respReader.ReadElementIfItCurrentOrRequired(
-                        "SMEVSignature", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false,
+                        "SMEVSignature", Smev3NameSpaces.MessageExchangeTypes11, required: false,
                         (r) => r.Skip());
                 });
         }

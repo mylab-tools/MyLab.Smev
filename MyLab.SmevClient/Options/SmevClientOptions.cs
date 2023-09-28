@@ -4,6 +4,6 @@
     {
         public string Url { get; set; }
 
-        public ClientCertificateOptions Certificate { get; set; }
+        public string CertThumbprint{ get; set; }
     }
 }

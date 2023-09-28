@@ -57,7 +57,7 @@ namespace MyLab.SmevClient.Smev
 
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteStartElement("SenderProvidedRequestData", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2);
+            writer.WriteStartElement("SenderProvidedRequestData", Smev3NameSpaces.MessageExchangeTypes11);
 
             writer.WriteAttributeString("Id", Id);
 

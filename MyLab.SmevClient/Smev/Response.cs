@@ -31,19 +31,19 @@ namespace MyLab.SmevClient.Smev
         public void ReadXml(XmlReader reader)
         {
             reader.ReadElementSubtreeContent(
-                "Response", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: true,
+                "Response", Smev3NameSpaces.MessageExchangeTypes11, required: true,
                 (responseReader) =>
                 {
                     responseReader.ReadElementIfItCurrentOrRequired(
-                        "OriginalMessageId", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false,
+                        "OriginalMessageId", Smev3NameSpaces.MessageExchangeTypes11, required: false,
                         (r) => OriginalMessageId = Guid.Parse((string)r.ReadElementContentAsString()));
 
                     responseReader.ReadElementIfItCurrentOrRequired(
-                        "OriginalTransactionCode", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false,
+                        "OriginalTransactionCode", Smev3NameSpaces.MessageExchangeTypes11, required: false,
                         (r) => OriginalTransactionCode = r.ReadElementContentAsString());
 
                     responseReader.ReadElementIfItCurrentOrRequired(
-                        "ReferenceMessageID", Smev3NameSpaces.MESSAGE_EXCHANGE_TYPES_1_2, required: false,
+                        "ReferenceMessageID", Smev3NameSpaces.MessageExchangeTypes11, required: false,
                         (r) => ReferenceMessageID = Guid.Parse(r.ReadElementContentAsString()));
 
                     var senderProvidedResponseData = new SenderProvidedResponseData<T>();
