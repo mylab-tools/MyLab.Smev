@@ -79,12 +79,12 @@ namespace MyLab.SmevClient
                     );
                 
                 httpResponse = await SendAsync(envelope, cancellationToken)
-                                                        .ConfigureAwait(false);
+                                                        ;
 
                 var soapEnvelopeBody = await httpResponse
                                                 .Content
                                                 .ReadSoapBodyAsAsync<SendRequestResponse>(cancellationToken)
-                                                .ConfigureAwait(false);
+                                                ;
 
                 return new Smev3ClientResponse<SendRequestResponse>(httpResponse, soapEnvelopeBody);
             }
@@ -118,7 +118,7 @@ namespace MyLab.SmevClient
                     signer: new Smev3XmlSigner(_algorithm));
             
             var httpResponse = await SendAsync(envelope, cancellationToken)
-                                        .ConfigureAwait(false);
+                                        ;
 
             return new Smev3ClientResponse(httpResponse);
         }
@@ -136,10 +136,10 @@ namespace MyLab.SmevClient
             where TServiceResponse : new()
         {
             using var response = await GetResponseAsync(namespaceUri, rootElementLocalName, cancellationToken)
-                                        .ConfigureAwait(false);
+                                        ;
 
             var data = await response.ReadSoapBodyAsAsync<GetResponseResponse<TServiceResponse>>()
-                                        .ConfigureAwait(false);
+                                        ;
 
             return new Smev3ClientResponse<GetResponseResponse<TServiceResponse>>(response.DetachHttpResponse(), data);
         }
@@ -163,10 +163,10 @@ namespace MyLab.SmevClient
                     signer: new Smev3XmlSigner(_algorithm));
             
             var httpResponse = await SendAsync(envelope, cancellationToken)
-                                        .ConfigureAwait(false);
+                                        ;
 
             var data = await httpResponse.Content.ReadSoapBodyAsAsync<AckResponse>(cancellationToken)
-                                        .ConfigureAwait(false);
+                                        ;
 
             return new Smev3ClientResponse<AckResponse>(httpResponse, data);
         }
@@ -217,7 +217,7 @@ namespace MyLab.SmevClient
                 using var httpClient = _httpClientFactory.CreateClient("SmevClient");
 
                 httpResponse = await httpClient.PostAsync(string.Empty, content, cancellationToken)
-                                               .ConfigureAwait(false);
+                                               ;
 
                 var reqDump = await _dumper.DumpAsync(httpResponse.RequestMessage);
                 var respDump = await _dumper.DumpAsync(httpResponse);
@@ -233,7 +233,7 @@ namespace MyLab.SmevClient
                 }
 
                 var faultInfo = await httpResponse.Content.ReadSoapBodyAsAsync<SoapFault>(cancellationToken)
-                                                  .ConfigureAwait(false);
+                                                  ;
 
                 throw new Smev3Exception(
                     $"FaultCode: {faultInfo.FaultCode}. FaultString: {faultInfo.FaultString}.")

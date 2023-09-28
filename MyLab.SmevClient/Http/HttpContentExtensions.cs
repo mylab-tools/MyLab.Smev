@@ -18,8 +18,7 @@ namespace MyLab.SmevClient.Http
             this HttpContent httpContent, CancellationToken cancellationToken)
             where T : ISoapEnvelopeBody, new()
         {
-            var stream = await httpContent.ReadSoapBodyAsStreamAsync(cancellationToken)
-                                            .ConfigureAwait(false);
+            var stream = await httpContent.ReadSoapBodyAsStreamAsync(cancellationToken);
             
 
             var reader = XmlReader.Create(stream, new XmlReaderSettings
@@ -38,8 +37,7 @@ namespace MyLab.SmevClient.Http
         internal static async Task<string> ReadSoapBodyAsStringAsync(
             this HttpContent httpContent, CancellationToken cancellationToken)
         {
-            var stream = await httpContent.ReadSoapBodyAsStreamAsync(cancellationToken)
-                                            .ConfigureAwait(false);
+            var stream = await httpContent.ReadSoapBodyAsStreamAsync(cancellationToken);
 
             using var streamReader = new StreamReader(stream, Encoding.UTF8);
 
@@ -49,8 +47,7 @@ namespace MyLab.SmevClient.Http
         private static async Task<Stream> ReadSoapBodyAsStreamAsync(
                     this HttpContent httpContent, CancellationToken cancellationToken)
         {
-            var stream = await httpContent.ReadAsStreamAsync()
-                                                .ConfigureAwait(false);
+            var stream = await httpContent.ReadAsStreamAsync();
 
             if (stream.CanSeek && stream.Position != 0)
             {
@@ -67,11 +64,9 @@ namespace MyLab.SmevClient.Http
                 var normBoundary = mediaTypeHeader.Boundary.Value.Trim('\"');
                 var multipartReader = new MultipartReader(normBoundary, stream);
 
-                var section = await multipartReader.ReadNextSectionAsync(cancellationToken)
-                                                .ConfigureAwait(false);
+                var section = await multipartReader.ReadNextSectionAsync(cancellationToken);
 
-                await section.Body.DrainAsync(cancellationToken)
-                    .ConfigureAwait(false);
+                await section.Body.DrainAsync(cancellationToken);
 
                 stream = section.Body;
             }
@@ -82,28 +77,6 @@ namespace MyLab.SmevClient.Http
             }
 
             return stream;
-        }
-
-        private static bool IsMimeMultipartContent(this HttpContent httpContent, out string boundary)
-        {
-            boundary = null;
-
-            if (!httpContent.Headers.ContentType.MediaType.StartsWith("multipart"))
-            {
-                return false;
-            }
-
-            foreach (var parameter in httpContent.Headers.ContentType.Parameters)
-            {
-                if (parameter.Name.Equals("boundary"))
-                {
-                    boundary = parameter.Value.Trim('"');
-
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }

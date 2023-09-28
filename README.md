@@ -122,7 +122,7 @@ namespace Smev3ClientExample
             using Smev3ClientResponse<SendRequestResponse> response = await client.SendRequestAsync(
                                                                 sendingContext, 
                                                                 cancellationToken: default)
-                                                              .ConfigureAwait(false);
+                                                              ;
 
             Console.WriteLine("Ид. сообщения СМЭВ: {0}", response.Data.MessageMetadata.MessageId);
         }
@@ -154,11 +154,11 @@ namespace Smev3ClientExample
                                                                 namespaceUri: null,
                                                                 rootElementLocalName: null,
                                                                 cancellationToken: default)
-                                                              .ConfigureAwait(false);
+                                                              ;
 
             // полное содежимое в виде строки
             string responseRawContent = await response.ReadAsStringAsync()
-                                                        .ConfigureAwait(false);
+                                                        ;
 
             Console.WriteLine("Полное содержимое входящего ответа СМЭВ: {0}", responseRawContent);
 
@@ -168,7 +168,7 @@ namespace Smev3ClientExample
             GetResponseResponse<MessagePrimaryContentXml> smevMetaData = await response.ReadSoapBodyAsAsync
                                                                                             <GetResponseResponse<MessagePrimaryContentXml>>
                                                                                             (cancellationToken: default)
-                                                                                        .ConfigureAwait(false);
+                                                                                        ;
 
             Response<MessagePrimaryContentXml> responseMetadata = smevMetaData.ResponseMessage.Response;
 
@@ -212,7 +212,7 @@ namespace Smev3ClientExample
                                                     namespaceUri: new Uri("urn://some-smev-service-namespace"),
                                                     rootElementLocalName: "SomeSmevServiceRespose",
                                                     cancellationToken: default)
-                                              .ConfigureAwait(false);
+                                              ;
 
             Response<SomeSmevServiceRespose> responseMetadata = response.Data.ResponseMessage.Response;
 
@@ -249,13 +249,13 @@ namespace Smev3ClientExample
                                                     namespaceUri: null,
                                                     rootElementLocalName: null,
                                                     cancellationToken: default)
-                                              .ConfigureAwait(false);
+                                              ;
 
             // подтверждение сообщения
             using var ackResponse = await client.AckAsync(
                                             response.Data.ResponseMessage.Response.MessageMetadata.MessageId.Value,
                                             cancellationToken: default)
-                                            .ConfigureAwait(false);
+                                            ;
         }
     }
 }
@@ -284,7 +284,7 @@ namespace Smev3ClientExample
             {
                 // подтверждение сообщения
                 using var ackResponse = await client.AckAsync(...)
-                                                .ConfigureAwait(false);
+                                                ;
             }
             catch (Smev3Exception ex)
             {
