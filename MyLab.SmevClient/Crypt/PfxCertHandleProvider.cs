@@ -44,7 +44,7 @@ namespace MyLab.SmevClient.Crypt
                             Interop.Consts.CRYPT_USER_KEYSET | Interop.Consts.PKCS12_IMPORT_SILENT);
                         if (storeHandle.IsInvalid)
                         {
-                            throw new Interop.LastErrorException();
+                            throw new Interop.CPLastErrorException();
                         }
                     }
                 }
@@ -64,7 +64,7 @@ namespace MyLab.SmevClient.Crypt
                         Interop.Consts.CERT_FIND_SHA1_HASH, new IntPtr(&thumbPrintDataBlob), IntPtr.Zero);
                     if (certHandle.IsInvalid)
                     {
-                        throw new Interop.LastErrorException();
+                        throw new Interop.CPLastErrorException();
                     }
                 }
                 return new CertContextSafeHandleHandler(storeHandle, certHandle);
