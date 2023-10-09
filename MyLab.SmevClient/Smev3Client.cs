@@ -202,7 +202,8 @@ namespace MyLab.SmevClient
                 throw new Smev3Exception(
                     $"FaultCode: {faultInfo.FaultCode}. FaultString: {faultInfo.FaultString}.")
                 {
-                    FaultInfo = faultInfo
+                    FaultInfo = faultInfo,
+                    ResponseMessage = httpResponse
                 };
             }
             catch
