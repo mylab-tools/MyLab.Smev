@@ -1,9 +1,9 @@
 # MyLab.Smev
 
-[![NuGet Version and Downloads count](https://buildstats.info/nuget/MyLab.Smev)](https://www.nuget.org/packages/MyLab.ApiSmev)
+[![NuGet Version and Downloads count](https://buildstats.info/nuget/MyLab.Smev)](https://www.nuget.org/packages/MyLab.Smev)
 
 ```
-Платформа: .NET 7
+Платформа: .NET 6
 ```
 
 Ознакомьтесь с последними изменениями в [журнале изменений](/CHANGELOG.md).
