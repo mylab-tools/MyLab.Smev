@@ -130,13 +130,14 @@ namespace MyLab.SmevClient
         /// <param name="messageId"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<Smev3ClientResponse<AckResponse>> AckAsync(Guid messageId, CancellationToken cancellationToken)
+        public async Task<Smev3ClientResponse<AckResponse>> AckAsync(Guid messageId, bool accepted, CancellationToken cancellationToken)
         {
             var envelope = new AckRequest(
                     new AckTargetMessage
                     {
                         MessageID = messageId,
-                        Id = "SIGNED_BY_CALLER"
+                        Id = "SIGNED_BY_CALLER",
+                        Accepted = accepted
                     },
                     signer: new Smev3XmlSigner(_algorithm));
             

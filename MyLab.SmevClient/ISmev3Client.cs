@@ -48,6 +48,6 @@ namespace MyLab.SmevClient
         /// <param name="messageId">Ид. подтверждаемого сообщения</param>
         /// <param name="cancellationToken">Токен отмены</param>
         /// <returns></returns>
-        Task<Smev3ClientResponse<AckResponse>> AckAsync(Guid messageId, CancellationToken cancellationToken = default);
+        Task<Smev3ClientResponse<AckResponse>> AckAsync(Guid messageId, bool accepted = true, CancellationToken cancellationToken = default);
     }
 }
