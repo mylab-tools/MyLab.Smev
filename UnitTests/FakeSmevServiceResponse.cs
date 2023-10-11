@@ -8,6 +8,6 @@ namespace UnitTests
     public class FakeSmevServiceResponse
     {
         [XmlElement("Status")]
-        public string Status { get; set; }
+        public string? Status { get; set; }
     }
 }
