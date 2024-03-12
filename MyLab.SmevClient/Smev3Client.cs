@@ -63,7 +63,10 @@ namespace MyLab.SmevClient
                             )
                         { TestMessage = context.IsTest },
                         signer: new Smev3XmlSigner(_algorithm)
-                    );
+                    )
+                {
+                    Attachments = context.Attachments
+                };
                 
                 httpResponse = await SendAsync(envelope, cancellationToken);
 

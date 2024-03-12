@@ -1,4 +1,5 @@
 ﻿using System;
+using MyLab.SmevClient.Smev;
 
 namespace MyLab.SmevClient
 {
@@ -8,6 +9,11 @@ namespace MyLab.SmevClient
         /// Данные запроса
         /// </summary>
         public T RequestData { get; set; }
+
+        /// <summary>
+        /// Вложения
+        /// </summary>
+        public AttachmentContentList Attachments { get; set; }
 
         /// <summary>
         /// Флаг тестового запроса
