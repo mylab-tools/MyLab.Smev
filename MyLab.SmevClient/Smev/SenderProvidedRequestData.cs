@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Mail;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -70,7 +71,13 @@ namespace MyLab.SmevClient.Smev
 
             Content.WriteXml(writer);
 
-            AttachmentHeaders?.WriteXml(writer);
+            if (AttachmentHeaders != null)
+            {
+                writer.WriteStartElement("AttachmentHeaderList", Smev3NameSpaces.MessageExchangeTypesBasic11);
+                AttachmentHeaders.WriteXml(writer);
+                writer.WriteEndElement();
+            }
+
 
             if (TestMessage)
             {

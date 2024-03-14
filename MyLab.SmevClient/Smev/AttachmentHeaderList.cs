@@ -32,7 +32,7 @@ public class AttachmentHeaderList : List<AttachmentHeader>, IXmlSerializable
     {
         foreach (var item in this)
         {
-            writer.WriteStartElement("AttachmentHeaderList", Smev3NameSpaces.MessageExchangeTypesBasic11);
+            writer.WriteStartElement("AttachmentHeader", Smev3NameSpaces.MessageExchangeTypesBasic11);
             item.WriteXml(writer);
             writer.WriteEndElement();
         }
