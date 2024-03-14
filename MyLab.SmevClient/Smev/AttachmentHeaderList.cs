@@ -6,17 +6,14 @@ using System.Xml.Serialization;
 
 namespace MyLab.SmevClient.Smev;
 
-/// <summary>
-/// Список вложений
-/// </summary>
-public class AttachmentContentList : List<AttachmentContent>, IXmlSerializable
+public class AttachmentHeaderList : List<AttachmentHeader>, IXmlSerializable
 {
-    public AttachmentContentList()
+    public AttachmentHeaderList()
     {
         
     }
 
-    public AttachmentContentList(IEnumerable<AttachmentContent> initial)
+    public AttachmentHeaderList(IEnumerable<AttachmentHeader> initial)
     {
         AddRange(initial);
     }
@@ -35,7 +32,7 @@ public class AttachmentContentList : List<AttachmentContent>, IXmlSerializable
     {
         foreach (var item in this)
         {
-            writer.WriteStartElement("AttachmentContent", Smev3NameSpaces.MessageExchangeTypesBasic11);
+            writer.WriteStartElement("AttachmentHeaderList", Smev3NameSpaces.MessageExchangeTypesBasic11);
             item.WriteXml(writer);
             writer.WriteEndElement();
         }

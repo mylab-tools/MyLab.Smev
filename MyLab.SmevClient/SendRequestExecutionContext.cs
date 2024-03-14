@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MyLab.SmevClient.Smev;
 
 namespace MyLab.SmevClient
@@ -13,7 +14,7 @@ namespace MyLab.SmevClient
         /// <summary>
         /// Вложения
         /// </summary>
-        public AttachmentContentList Attachments { get; set; }
+        public RequestAttachment[] Attachments { get; set; }
 
         /// <summary>
         /// Флаг тестового запроса

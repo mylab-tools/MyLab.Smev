@@ -27,6 +27,11 @@ namespace MyLab.SmevClient.Smev
         }
 
         /// <summary>
+        /// Заголовки вложений
+        /// </summary>
+        public AttachmentHeaderList AttachmentHeaders { get; set; }
+
+        /// <summary>
         /// Атрибут Id xml элемента
         /// </summary>
         public string Id { get; }
@@ -64,6 +69,8 @@ namespace MyLab.SmevClient.Smev
             writer.WriteElementString("MessageID", MessageId.ToString());
 
             Content.WriteXml(writer);
+
+            AttachmentHeaders?.WriteXml(writer);
 
             if (TestMessage)
             {

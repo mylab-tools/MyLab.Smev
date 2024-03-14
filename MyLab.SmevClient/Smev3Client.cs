@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Mime;
@@ -54,19 +55,33 @@ namespace MyLab.SmevClient
             HttpResponseMessage httpResponse = null;
             try
             {
+                var reqData = new SenderProvidedRequestData<TServiceRequest>(
+                    messageId: Rfc4122.GenerateUUIDv1(),
+                    xmlElementId: "SIGNED_BY_CONSUMER",
+                    content: new MessagePrimaryContent<TServiceRequest>(context.RequestData)
+                )
+                {
+                    TestMessage = context.IsTest
+                };
+
                 var envelope = new SendRequestRequest<TServiceRequest>
                     (
-                        requestData: new SenderProvidedRequestData<TServiceRequest>(
-                            messageId: Rfc4122.GenerateUUIDv1(),
-                            xmlElementId: "SIGNED_BY_CONSUMER",
-                            content: new MessagePrimaryContent<TServiceRequest>(context.RequestData)
-                            )
-                        { TestMessage = context.IsTest },
+                        requestData: reqData,
                         signer: new Smev3XmlSigner(_algorithm)
-                    )
+                    );
+
+                if (context.Attachments != null)
                 {
-                    Attachments = context.Attachments
-                };
+                    reqData.AttachmentHeaders = new AttachmentHeaderList(
+                        context.Attachments.Select(a => new AttachmentHeader(a.Id, a.MimeType)
+                        {
+                            SignatureBase64 = a.SignatureBase64
+                        })
+                    );
+                    envelope.Attachments = new AttachmentContentList(
+                        context.Attachments.Select(a => new AttachmentContent(a.Id, a.ContentBase64))
+                    );
+                }
                 
                 httpResponse = await SendAsync(envelope, cancellationToken);
 

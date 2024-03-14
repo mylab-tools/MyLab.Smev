@@ -36,11 +36,11 @@ namespace MyLab.SmevClient.Smev
 
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteStartElement("Id", Smev3NameSpaces.MessageExchangeTypesBasic11);
+            writer.WriteStartElement("Id", Smev3NameSpaces.MessageExchangeTypes11);
             writer.WriteString(Id);
             writer.WriteEndElement();
 
-            writer.WriteStartElement("Content", Smev3NameSpaces.MessageExchangeTypesBasic11);
+            writer.WriteStartElement("Content", Smev3NameSpaces.MessageExchangeTypes11);
             writer.WriteString(Base64Content);
             writer.WriteEndElement();
         }
