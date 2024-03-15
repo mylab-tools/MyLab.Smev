@@ -41,17 +41,19 @@ public class AttachmentHeader : IXmlSerializable
 
     public void WriteXml(XmlWriter writer)
     {
-        writer.WriteStartElement("contentId", Smev3NameSpaces.MessageExchangeTypes11);
+        writer.WriteStartElement("contentId", Smev3NameSpaces.MessageExchangeTypesBasic11);
         writer.WriteString(Id);
         writer.WriteEndElement();
 
-        writer.WriteStartElement("MimeType", Smev3NameSpaces.MessageExchangeTypes11);
+        writer.WriteStartElement("MimeType", Smev3NameSpaces.MessageExchangeTypesBasic11);
         writer.WriteString(MimeType);
         writer.WriteEndElement();
 
-        writer.WriteStartElement("SignaturePKCS7", Smev3NameSpaces.MessageExchangeTypes11);
-        writer.WriteString(SignatureBase64);
-        writer.WriteString(SignatureBase64);
-        writer.WriteEndElement();
+        if (SignatureBase64 != null)
+        {
+            writer.WriteStartElement("SignaturePKCS7", Smev3NameSpaces.MessageExchangeTypesBasic11);
+            writer.WriteString(SignatureBase64);
+            writer.WriteEndElement();
+        }
     }
 }
