@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MyLab.SmevClient;
 
@@ -10,17 +11,20 @@ public class RequestAttachment
     /// <summary>
     /// Идентификатор
     /// </summary>
-    public string Id { get; set; }
+    public string Id { get; }
     /// <summary>
     /// Содержание в формате BASE64
     /// </summary>
-    public string ContentBase64 { get; set; }
+    public string ContentBase64 { get;}
     /// <summary>
     /// Тип содежимого
     /// </summary>
-    public string MimeType { get; set; }
-    /// <summary>
-    /// ЭП PKCS7 в формате BASE64
-    /// </summary>
-    public string SignatureBase64 { get; set; }
+    public string MimeType { get; }
+
+    public RequestAttachment(string id, string contentBase64, string mimeType)
+    {
+        Id = id ?? throw new ArgumentNullException(nameof(id));
+        ContentBase64 = contentBase64 ?? throw new ArgumentNullException(nameof(contentBase64));
+        MimeType = mimeType ?? throw new ArgumentNullException(nameof(mimeType));
+    }
 }

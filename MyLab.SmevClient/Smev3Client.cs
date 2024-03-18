@@ -75,7 +75,7 @@ namespace MyLab.SmevClient
                     reqData.AttachmentHeaders = new AttachmentHeaderList(
                         context.Attachments.Select(a => new AttachmentHeader(a.Id, a.MimeType)
                         {
-                            SignatureBase64 = a.SignatureBase64
+                            SignatureBase64 = CalcAttachmentSignature(a.ContentBase64)
                         })
                     );
                     envelope.Attachments = new AttachmentContentList(
@@ -97,6 +97,13 @@ namespace MyLab.SmevClient
 
                 throw;
             }
+        }
+
+        private string CalcAttachmentSignature(string base64Content)
+        {
+            var binContent = Convert.FromBase64String(base64Content);
+            var signature = _algorithm.CreateHashSignature(binContent);
+            return Convert.ToBase64String(signature);
         }
 
         /// <summary>
