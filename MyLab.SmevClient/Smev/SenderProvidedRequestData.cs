@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Mail;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -25,6 +26,11 @@ namespace MyLab.SmevClient.Smev
 
             Id = xmlElementId;
         }
+
+        /// <summary>
+        /// Заголовки вложений
+        /// </summary>
+        public AttachmentHeaderList AttachmentHeaders { get; set; }
 
         /// <summary>
         /// Атрибут Id xml элемента
@@ -64,6 +70,14 @@ namespace MyLab.SmevClient.Smev
             writer.WriteElementString("MessageID", MessageId.ToString());
 
             Content.WriteXml(writer);
+
+            if (AttachmentHeaders != null)
+            {
+                writer.WriteStartElement("AttachmentHeaderList", Smev3NameSpaces.MessageExchangeTypesBasic11);
+                AttachmentHeaders.WriteXml(writer);
+                writer.WriteEndElement();
+            }
+
 
             if (TestMessage)
             {

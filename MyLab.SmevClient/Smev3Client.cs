@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Mime;
@@ -27,7 +28,9 @@ namespace MyLab.SmevClient
         /// Криптоалгоритм
         /// </summary>
         private GostAsymmetricAlgorithm _algorithm;
-        
+
+        private Pkcs7SignatureProcessor _pkcs7Signer;
+
         private readonly IDslLogger _log;
         private readonly HttpMessageDumper _dumper;
 
@@ -36,6 +39,7 @@ namespace MyLab.SmevClient
             _httpClientFactory = httpClientFactory;
             var certProvider = new ByTumbprintCertHandleProvider(StoreLocation.CurrentUser, opts.Value.CertThumbprint);
             _algorithm = new GostAsymmetricAlgorithm(certProvider);
+            _pkcs7Signer = new Pkcs7SignatureProcessor(certProvider);
             _log = logger?.Dsl();
             _dumper = new HttpMessageDumper();
         }
@@ -54,16 +58,33 @@ namespace MyLab.SmevClient
             HttpResponseMessage httpResponse = null;
             try
             {
+                var reqData = new SenderProvidedRequestData<TServiceRequest>(
+                    messageId: Rfc4122.GenerateUUIDv1(),
+                    xmlElementId: "SIGNED_BY_CONSUMER",
+                    content: new MessagePrimaryContent<TServiceRequest>(context.RequestData)
+                )
+                {
+                    TestMessage = context.IsTest
+                };
+
                 var envelope = new SendRequestRequest<TServiceRequest>
                     (
-                        requestData: new SenderProvidedRequestData<TServiceRequest>(
-                            messageId: Rfc4122.GenerateUUIDv1(),
-                            xmlElementId: "SIGNED_BY_CONSUMER",
-                            content: new MessagePrimaryContent<TServiceRequest>(context.RequestData)
-                            )
-                        { TestMessage = context.IsTest },
+                        requestData: reqData,
                         signer: new Smev3XmlSigner(_algorithm)
                     );
+
+                if (context.Attachments != null)
+                {
+                    reqData.AttachmentHeaders = new AttachmentHeaderList(
+                        context.Attachments.Select(a => new AttachmentHeader(a.Id, a.MimeType)
+                        {
+                            SignatureBase64 = CalcAttachmentSignature(a.ContentBase64)
+                        })
+                    );
+                    envelope.Attachments = new AttachmentContentList(
+                        context.Attachments.Select(a => new AttachmentContent(a.Id, a.ContentBase64))
+                    );
+                }
                 
                 httpResponse = await SendAsync(envelope, cancellationToken);
 
@@ -79,6 +100,13 @@ namespace MyLab.SmevClient
 
                 throw;
             }
+        }
+
+        private string CalcAttachmentSignature(string base64Content)
+        {
+            var binContent = Convert.FromBase64String(base64Content);
+            var signature = _pkcs7Signer.Detached(binContent);
+            return Convert.ToBase64String(signature);
         }
 
         /// <summary>

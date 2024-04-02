@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Body>
-    <ns2:SendRequestResponse xmlns="urn://x-artefacts-smev-gov-ru/services/message-exchange/types/basic/1.2" xmlns:ns2="urn://x-artefacts-smev-gov-ru/services/message-exchange/types/1.2" xmlns:ns3="urn://x-artefacts-smev-gov-ru/services/message-exchange/types/faults/1.2">
+    <ns2:SendRequestResponse xmlns="urn://x-artefacts-smev-gov-ru/services/message-exchange/types/basic/1.1" xmlns:ns2="urn://x-artefacts-smev-gov-ru/services/message-exchange/types/1.1" xmlns:ns3="urn://x-artefacts-smev-gov-ru/services/message-exchange/types/faults/1.1">
       <ns2:MessageMetadata Id="SIGNED_BY_SMEV">
         <ns2:MessageId>ac9fbf27-8b8c-11eb-9086-e2bf794ac2e9</ns2:MessageId>
         <ns2:MessageType>REQUEST</ns2:MessageType>
@@ -9,9 +9,12 @@
           <ns2:Mnemonic>77BD01</ns2:Mnemonic>
         </ns2:Sender>
         <ns2:SendingTimestamp>2021-03-23T07:03:07.000+03:00</ns2:SendingTimestamp>
+        <ns2:DestinationName>Destination</ns2:DestinationName>
         <ns2:Recipient>
           <ns2:Mnemonic>emu</ns2:Mnemonic>
         </ns2:Recipient>
+        <ns2:SupplementaryData>
+        </ns2:SupplementaryData>
         <ns2:Status>requestIsQueued</ns2:Status>
       </ns2:MessageMetadata>
       <ns2:SMEVSignature>

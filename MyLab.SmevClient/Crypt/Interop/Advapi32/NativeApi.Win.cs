@@ -8,7 +8,7 @@ namespace MyLab.SmevClient.Crypt
     {
         [DllImport(Libraries.Advapi32, CharSet = CharSet.Ansi, SetLastError = true, EntryPoint = "CryptAcquireContextA")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern  bool CryptAcquireContext(
+        public static extern bool CryptAcquireContext(
             [Out] out CspSafeHandle phProv,
             [In] string pszContainer,
             [In] string pszProvider,
@@ -17,7 +17,7 @@ namespace MyLab.SmevClient.Crypt
 
         [DllImport(Libraries.Advapi32, CharSet = CharSet.Auto, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern 
+        public static extern
         bool CryptReleaseContext(
             [In] IntPtr hProv,
             [In] uint dwFlags);
@@ -51,7 +51,7 @@ namespace MyLab.SmevClient.Crypt
 
         [DllImport(Libraries.Advapi32, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern 
+        public static extern
         bool CryptGetHashParam(
             [In] HashSafeHandle hHash,
             [In] uint dwParam,
@@ -70,7 +70,7 @@ namespace MyLab.SmevClient.Crypt
 
         [DllImport(Libraries.Advapi32, SetLastError = true, CharSet = CharSet.Ansi, EntryPoint = "CryptSignHashA")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern 
+        public static extern
         bool CryptSignHash(
             [In] HashSafeHandle hHash,
             [In] uint keySpec,
@@ -78,5 +78,31 @@ namespace MyLab.SmevClient.Crypt
             [In] uint flags,
             [Out] IntPtr signature,
             [In, Out] ref int signatureLen);
+
+
+        [DllImport(Libraries.Crypt32, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal unsafe static extern bool CryptSignMessage(
+                [In] ref CRYPT_SIGN_MESSAGE_PARA pSignPara,
+                // Значение TRUE , если это отсоединяемая сигнатура.
+                // В противном случае — FALSE. Если для этого параметра задано значение TRUE, в pbSignedBlob кодируется только хэш со знаком.
+                // В противном случае кодируются как rgpbToBeSigned , так и хэш со знаком.
+                [In, MarshalAs(UnmanagedType.Bool)] bool fDetachedSignature,
+                //Количество элементов массива в rgpbToBeSigned и rgcbToBeSigned.
+                //Этот параметр должен иметь значение один, если только fDetachedSignature не имеет значение TRUE.
+                [In] uint cToBeSigned,
+                // Массив указателей на буферы, содержащие содержимое для подписи.
+                [In] IntPtr rgpbToBeSigned,
+
+                // Массив размеров (в байтах) буферов содержимого, на которые указывает rgpbToBeSigned.
+                [In] IntPtr rgcbToBeSigned,
+
+                // Указатель на буфер для получения закодированного хэша со знаком, если fDetachedSignature имеет значение TRUE,
+                // или на закодированное содержимое и хэш со знаком, если fDetachedSignature имеет значение FALSE
+                [Out] IntPtr signature,
+
+                // Указатель на DWORD , указывающий размер буфера pbSignedBlob (в байтах).
+                // При возврате функции эта переменная содержит размер подписанного и закодированного сообщения в байтах
+                [In, Out] ref uint signatureLength);
     }
 }

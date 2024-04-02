@@ -143,7 +143,7 @@ const string localName = "Response";
 const string namespaceUri = "http://myhost.ru/chto-to-tam/blabla/v2";
 
 var soapResp = await client.GetResponseAsync<Response>(new Uri(namespaceUri), localName);
-var smevResp = resp.Data.ResponseMessage.Response;
+var smevResp = soapResp.Data.ResponseMessage.Response;
 
 if(smevResp != null)
 {
@@ -178,7 +178,7 @@ try
     
     // Если не было исключения, значит подтверждено успешно
 }
-catch(Smev3ClientException e) when (e.IsMessageNotFound())
+catch(Smev3Exception e) when (e.IsMessageNotFound())
 {
     // В очереди ответов сообщение с указанным идентификатором не найдено 
 }

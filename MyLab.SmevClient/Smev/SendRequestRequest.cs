@@ -25,6 +25,8 @@ namespace MyLab.SmevClient.Smev
 
         public Smev3Methods SmevMethod => Smev3Methods.SendRequest;
 
+        public AttachmentContentList Attachments { get; set; }
+
         public SendRequestRequest()
         {
         }
@@ -73,6 +75,13 @@ namespace MyLab.SmevClient.Smev
             writer.WriteStartElement("SendRequestRequest", Smev3NameSpaces.MessageExchangeTypes11);
             
             _requestData.WriteXml(writer);
+
+            if (Attachments != null)
+            {
+                writer.WriteStartElement("AttachmentContentList", Smev3NameSpaces.MessageExchangeTypesBasic11);
+                Attachments.WriteXml(writer);
+                writer.WriteEndElement();
+            }
 
             writer.WriteStartElement("CallerInformationSystemSignature");
 
