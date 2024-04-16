@@ -73,7 +73,7 @@ namespace MyLab.SmevClient
                         signer: new Smev3XmlSigner(_algorithm)
                     );
 
-                if (context.Attachments != null)
+                if (context.Attachments is { Length: >0 })
                 {
                     reqData.AttachmentHeaders = new AttachmentHeaderList(
                         context.Attachments.Select(a => new AttachmentHeader(a.Id, a.MimeType)
